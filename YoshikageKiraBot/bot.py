@@ -19,12 +19,11 @@ def get_image(name: str) -> discord.File:
 async def on_ready():
     print(f'{client.user.name} has connected to Discord!')
     channels = client.get_all_channels()
-    
+
     for channel in channels:
         print(channel.guild)
         if channel.name in ['bots', 'general']:
             await channel.send("Has anyone seen a brown paper bag?")
-
 
 @client.event
 async def on_message(message):
@@ -39,6 +38,14 @@ async def on_message(message):
     if 'bites the dust' in message.content.lower(): 
         await message.channel.send(file=get_image('bitesthedust.gif'))
     if 'open door' in message.content.lower():
-        await message.channel.send(f"@{message.author} Killer Queen has already touched that doorknob", file=get_image('doorknob.gif'))
+        await message.channel.send(f"{message.author.mention}, Killer Queen has already touched that doorknob!", file=get_image('doorknob.gif'))
+        try:
+            await message.author.kick()
+            await message.channel.send(f"{message.author.mention} is no more!")
+        except:
+            await message.channel.send(f"{message.author.mention} has somehow survived!")
+    if client.user.mentioned_in(message):
+        await message.channel.send(f"{message.author.mention}, I\'m just a man who wants to live a quiet life")
+
 
 client.run(TOKEN)
